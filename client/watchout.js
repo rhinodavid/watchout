@@ -1,6 +1,6 @@
 // start slingin' some d3 here.
-var width = 800;
-var height = 640;
+var width = window.innerWidth;
+var height = 380;
 
 var tickCounter = 0;
 
@@ -23,16 +23,15 @@ var score = [
   }
 ];
 
-var scoreboard = d3.select('.scoreboard').selectAll('div')
-  .data(score).enter().append('div');
+var scoreboard = d3.select('.scoreboard').selectAll('span')
+  .data(score).enter().append('span');
 
-var svg = d3.select('body').append('svg')
+var svg = d3.select('body').insert('svg', ':first-child')
   .attr('width', width)
   .attr('height', height);
 
 svg.append('rect').attr('width', width)
-  .attr('height', height).attr('stroke', 'blue')
-  .attr('stroke-width', '5px');
+  .attr('height', height).attr('fill', 'black');
 
 var nodes = d3.range(11).map(function() {
   return {
@@ -90,7 +89,7 @@ force.on('tick', function(e) {
 
   scoreboard.data(score).text(function(d) {
     var score = ((d.name === 'High score') || (d.name === 'Current score')) ? Math.floor(d.value / 10) : d.value;
-    return d.name + ' ' + score;
+    return d.name + ': ' + score;
   });
 
   var q = d3.geom.quadtree(nodes, width, height);
@@ -124,7 +123,7 @@ force.on('tick', function(e) {
   force.resume(); // prevent "cooling down" freezing
 });
 
-var lastCollisionTime = Date.now();
+var lastCollisionTime = Date.now() + 3000;
 
 
 var collisionDetector = function(player) {
@@ -167,4 +166,4 @@ var collisionDetector = function(player) {
 
 };
 
-force.start();
+ force.start();
